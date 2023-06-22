@@ -1,0 +1,37 @@
+1.安装好arm-2009q3交叉编译器
+	1）在/usr/local/目录下，新建arm文件夹
+	2）交叉编译器解压到/usr/local/arm
+	3）在家目录下的.bashrc文件添加以下
+		export PATH=/usr/local/arm/arm-2009q3/bin:$PATH
+	   并注释掉
+  		#export PATH=/usr/local/arm/5.4.0/usr/bin:$PATH
+	   保存并关闭.bashrc
+	4）执行source ~/.bashrc，让环境变量生效。
+
+2.移植libmad
+	1）在家目录新建libmad文件夹
+	2）解压libmad-0.15.1b.tar.bz2到家目录
+	3）进入libmad-0.15.1b
+	4）配置libmad-0.15.1b，执行以下语句
+		./configure --enable-fpm=arm --host=arm-linux --disable-shared --disable-debugging --prefix=/home/gec/libmad CC=arm-linux-gcc
+   	5）make && make install
+		最后生成在家目录下的libmad	
+3.然后移植MPlayer
+	1）./configure --cc=/usr/local/arm/bin/arm-linux-gcc --target=arm-none-linux-gnueabi --enable-static --prefix=/tmp/Mplayer --disable-win32dll --disable-dvdread --enable-fbdev --disable-mencoder --disable-live --disable-mp3lib --enable-mad --enable-libavcodec_a --language=zh_CN --disable-armv5te --disable-armv6 --with-extraincdir=/home/gec/libmad/include --with-extralibdir=/home/gec/libmad/lib --host-cc=arm-linux-gcc --enable-ossaudio --disable-ivtv --disable-tv
+	2）make
+出现错误，只需要打开libccedss/ioctl.c  把对应行注释掉即可 //
+
+	3）在当前目录下生成mplayer
+
+4.使用
+	ffmpeg -i ForzaHorizon_1.mp4 -s 630x380 -r 16 -b:v 1500k 01.mp4
+  	mplayer mv.mp4 -fs	(640*480大小播放)
+  	mplayer video.avi -fs	(640*480大小播放)
+	
+5.移植到开发板
+	1）ifconfig eth0 192.168.63.45 #修改对应的IP
+	2）mount -o nolock,tcp 192.168.63.44:/home/lee tmp #nfs挂载磁盘（Linux虚拟机环境IP）
+	把生成的mplayer放到开发板目录/bin下
+	
+6.参考链接
+https://blog.csdn.net/weixin_43288201/article/details/105847664
