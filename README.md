@@ -1,0 +1,2 @@
+# Linux_Video_Player
+基于mplayer的视频播放器，纯C语言编写，请根据需要设置开发板触摸屏的分辨率
